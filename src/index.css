@@ -1,0 +1,208 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/*  Design tokens                                                      */
+/*  Sourced 1-to-1 from the original retro-8 portfolio HTML, but now   */
+/*  expressed as Tailwind v4 theme variables so every utility class    */
+/*  (bg-primary, text-fg-muted, shadow-hard, font-display, etc.)       */
+/*  resolves to these values automatically.                            */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Brand palette --------------------------------------------------- */
+  --color-bg: #fff5e6;
+  --color-bg-darker: #ffe4c4;
+  --color-surface: #ffffff;
+  --color-surface-alt: #fff0d4;
+
+  --color-primary: #ff6b2b;
+  --color-primary-dark: #cc4411;
+  --color-secondary: #f59e0b;
+  --color-accent: #ff2d92;
+  --color-success: #b8ff5c;
+
+  --color-fg: #1a1a1a;
+  --color-fg-alt: #222222;
+  --color-fg-muted: #555555;
+  --color-fg-light: #ffffff;
+
+  --color-border: #1a1a1a;
+
+  /* Terminal palette (used in the contact section) ------------------ */
+  --color-term-bg: #0d1117;
+  --color-term-panel: #1a1f29;
+  --color-term-input: #161b22;
+  --color-term-border: #30363d;
+  --color-term-divider: #2d333b;
+  --color-term-fg: #d4e4d4;
+  --color-term-comment: #8b949e;
+  --color-term-green: #7ee787;
+  --color-term-blue: #79c0ff;
+  --color-term-orange: #ffa657;
+  --color-term-red: #ff5f57;
+  --color-term-yellow: #febc2e;
+  --color-term-emerald: #28c840;
+
+  /* Typography ------------------------------------------------------ */
+  --font-display: 'Archivo Black', 'Arial Black', sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radii ----------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Neo-brutalist hard shadows ------------------------------------- */
+  /* Tailwind exposes these as: shadow-hard-sm / shadow-hard / shadow-hard-lg */
+  --shadow-hard-sm: 3px 3px 0 #1a1a1a;
+  --shadow-hard: 4px 4px 0 #1a1a1a;
+  --shadow-hard-lg: 6px 6px 0 #1a1a1a;
+  --shadow-hard-xl: 8px 8px 0 #1a1a1a;
+  --shadow-hard-2xl: 10px 10px 0 #1a1a1a;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base layer                                                         */
+/* ------------------------------------------------------------------ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Selection styling — keeps the brand colour even when text is */
+  /* highlighted, which is the kind of polish recruiters notice.   */
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-fg-light);
+  }
+
+  /* Smooth focus ring (keyboard-only) */
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Honor reduced-motion users: kills the heavy framer-motion */
+  /* keyframes through prefers-reduced-motion at the source.    */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Utility helpers — keep the design language consistent without      */
+/*  repeating long class chains in every component.                    */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+  /* Hard 3-pixel brutalist border, used on every card / button */
+  .border-hard {
+    border: 3px solid var(--color-border);
+  }
+  .border-hard-2 {
+    border: 2px solid var(--color-border);
+  }
+
+  /* Press-down hover pattern: pull element up + grow shadow */
+  .hover-press-sm {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .hover-press-sm:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--color-border);
+  }
+
+  .hover-press {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .hover-press:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 var(--color-border);
+  }
+
+  .hover-press-lg {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .hover-press-lg:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 var(--color-border);
+  }
+
+  /* Grid backdrop used behind the hero — pure CSS, no SVG */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 26, 26, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Marquee animation (skills ticker) */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee var(--marquee-duration, 30s) linear infinite;
+  }
+  /* Pause marquee on hover for accessibility / scannability */
+  .marquee-pause-on-hover:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+
+  /* Terminal blinking caret */
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+  .animate-blink {
+    animation: blink 1s infinite;
+  }
+
+  /* Floating motion for hero cards — kept very subtle */
+  @keyframes float-y {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  .animate-float-y {
+    animation: float-y 6s ease-in-out infinite;
+  }
+}
