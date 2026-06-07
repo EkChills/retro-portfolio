@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { cn } from '~/lib/cn'
 import { nav } from '~/lib/data'
 import { easeOutExpo } from '~/lib/motion'
+import { MagneticLink } from '~/components/MagneticLink'
 
 /**
  * Site navigation.
@@ -89,15 +90,13 @@ export function Navigation() {
           {nav.map((item) => (
             <li key={item.href}>
               {item.cta ? (
-                <motion.a
+                <MagneticLink
                   href={item.href}
-                  whileHover={{ x: -2, y: -2 }}
-                  whileTap={{ x: 0, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+                  strength={10}
                   className="rounded-[8px] border-hard bg-primary px-6 py-2.5 font-body text-[15px] font-extrabold text-fg-light shadow-hard-sm transition-colors hover:bg-primary-dark"
                 >
                   {item.label}
-                </motion.a>
+                </MagneticLink>
               ) : (
                 <a
                   href={item.href}

@@ -4,7 +4,8 @@ import { BackgroundText } from '~/components/BackgroundText'
 import { Parallax } from '~/components/Parallax'
 import { Reveal } from '~/components/Reveal'
 import { SectionLabel } from '~/components/SectionLabel'
-import { easeOutExpo, stagger } from '~/lib/motion'
+import { TiltCard } from '~/components/TiltCard'
+import { easeOutExpo, fadeUp3D, stagger } from '~/lib/motion'
 
 /**
  * Experience — a vertical list of role cards.
@@ -35,7 +36,7 @@ export function Experience() {
         <Reveal>
           <SectionLabel>Experience</SectionLabel>
         </Reveal>
-        <Reveal as="h2" className="mb-12 font-display text-[clamp(36px,6vw,56px)] leading-[1.1] text-fg-alt">
+        <Reveal as="h2" variants={fadeUp3D} className="mb-12 font-display text-[clamp(36px,6vw,56px)] leading-[1.1] text-fg-alt">
           Where I've been building
         </Reveal>
 
@@ -66,6 +67,7 @@ function ExperienceCard({
 
   return (
     <Parallax speed={parallaxSpeed}>
+      <TiltCard maxTilt={5}>
       <motion.article
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -135,6 +137,7 @@ function ExperienceCard({
           </div>
         </div>
       </motion.article>
+      </TiltCard>
     </Parallax>
   )
 }

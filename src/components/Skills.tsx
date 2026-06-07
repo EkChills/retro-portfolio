@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { skillGroups, type SkillGroup } from '~/lib/data'
 import { Reveal } from '~/components/Reveal'
 import { SectionLabel } from '~/components/SectionLabel'
+import { TiltCard } from '~/components/TiltCard'
 import { easeOutBack, stagger, tagPop } from '~/lib/motion'
 
 /**
@@ -58,41 +59,43 @@ export function Skills() {
 /* ---------------------------------------------------------------- */
 function SkillCard({ group }: { group: SkillGroup }) {
   return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.55, ease: easeOutBack },
-        },
-      }}
-      whileHover={{ x: -3, y: -3 }}
-      transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-      className="border-hard bg-surface p-7 shadow-hard transition-shadow hover:shadow-[7px_7px_0_var(--color-border)] md:p-8"
-    >
-      <h3 className="mb-5 inline-block border-hard-2 bg-surface-alt px-3.5 py-1.5 font-display text-sm uppercase tracking-[2px] text-primary">
-        {group.title}
-      </h3>
-
+    <TiltCard maxTilt={6} shineColor="rgba(255,107,43,0.08)">
       <motion.div
-        variants={stagger(0.05, 0.04)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.4 }}
-        className="flex flex-wrap gap-2.5"
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.55, ease: easeOutBack },
+          },
+        }}
+        whileHover={{ x: -3, y: -3 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+        className="border-hard bg-surface p-7 shadow-hard transition-shadow hover:shadow-[7px_7px_0_var(--color-border)] md:p-8"
       >
-        {group.tags.map((tag) => (
-          <motion.span
-            key={tag}
-            variants={tagPop}
-            whileHover={{ y: -2, scale: 1.02 }}
-            className="cursor-default rounded-[8px] border-hard-2 bg-bg px-4 py-2 text-[13px] font-bold text-fg-alt transition-colors hover:border-fg hover:bg-primary hover:text-fg-light"
-          >
-            {tag}
-          </motion.span>
-        ))}
+        <h3 className="mb-5 inline-block border-hard-2 bg-surface-alt px-3.5 py-1.5 font-display text-sm uppercase tracking-[2px] text-primary">
+          {group.title}
+        </h3>
+
+        <motion.div
+          variants={stagger(0.05, 0.04)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          className="flex flex-wrap gap-2.5"
+        >
+          {group.tags.map((tag) => (
+            <motion.span
+              key={tag}
+              variants={tagPop}
+              whileHover={{ y: -2, scale: 1.02 }}
+              className="cursor-default rounded-[8px] border-hard-2 bg-bg px-4 py-2 text-[13px] font-bold text-fg-alt transition-colors hover:border-fg hover:bg-primary hover:text-fg-light"
+            >
+              {tag}
+            </motion.span>
+          ))}
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </TiltCard>
   )
 }

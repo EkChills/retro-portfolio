@@ -50,6 +50,17 @@ export const scaleIn: Variants = {
   },
 }
 
+/** Fade-up with a subtle 3D tilt — "tilting into the screen" entrance. */
+export const fadeUp3D: Variants = {
+  hidden: { opacity: 0, y: 32, rotateX: 4 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: { duration: 0.8, ease: easeOutExpo },
+  },
+}
+
 /* ---------------------------------------------------------------- */
 /* Stagger containers                                                */
 /* ---------------------------------------------------------------- */

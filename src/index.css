@@ -192,6 +192,18 @@
     animation: blink 1s infinite;
   }
 
+  /* 3D context helpers */
+  .perspective-container {
+    perspective: 800px;
+    transform-style: preserve-3d;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
   /* Floating motion for hero cards — kept very subtle */
   @keyframes float-y {
     0%,

@@ -2,7 +2,9 @@ import { motion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { hero } from '~/lib/data'
 import { easeOutExpo, float, lineMask, stagger } from '~/lib/motion'
+import { MagneticLink } from '~/components/MagneticLink'
 import { Parallax } from '~/components/Parallax'
+import { TiltCard } from '~/components/TiltCard'
 import { cn } from '~/lib/cn'
 
 /**
@@ -135,11 +137,8 @@ export function Hero() {
             animate="visible"
             className="mb-12 flex flex-wrap items-center gap-4"
           >
-            <motion.a
+            <MagneticLink
               href={hero.primaryCta.href}
-              whileHover={{ x: -3, y: -3 }}
-              whileTap={{ x: 0, y: 0 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 22 }}
               className="inline-flex items-center gap-2.5 rounded-[12px] border-hard bg-primary px-8 py-4 font-body text-base font-extrabold text-fg-light shadow-hard transition-colors hover:bg-primary-dark"
             >
               {hero.primaryCta.label}
@@ -153,16 +152,13 @@ export function Hero() {
               >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </motion.a>
-            <motion.a
+            </MagneticLink>
+            <MagneticLink
               href={hero.secondaryCta.href}
-              whileHover={{ x: -3, y: -3 }}
-              whileTap={{ x: 0, y: 0 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 22 }}
               className="inline-flex items-center gap-2.5 rounded-[12px] border-hard bg-bg px-8 py-4 font-body text-base font-extrabold text-fg-alt shadow-hard transition-colors hover:bg-surface-alt"
             >
               {hero.secondaryCta.label}
-            </motion.a>
+            </MagneticLink>
           </motion.div>
 
           {/* Stat row */}
@@ -235,6 +231,10 @@ const positions = [
 // drift UP (background feel), producing depth without any 3D math.
 const parallaxSpeeds = [0.35, -0.25, 0.5]
 
+// Depth layers — each card sits at a different Z distance from the viewer.
+// Combined with the parent perspective:1200px, these create real 3D depth.
+const translateZValues = [20, 40, 60]
+
 const tones: Record<CardData['tone'], string> = {
   surface: 'bg-surface text-fg-alt',
   secondary: 'bg-secondary text-fg-alt',
@@ -245,45 +245,47 @@ function FloatingCard({ card, index }: { card: CardData; index: number }) {
   const isLight = card.tone === 'primary'
 
   return (
-    // Outer Parallax owns the Y axis (drives `style.y` via useTransform).
-    // The inner motion.div handles the entry + hover transforms — they
-    // compose because Parallax only writes y/x/rotate, leaving scale free.
+    // Parallax → TiltCard → motion.div
+    // Each layer owns a different transform axis: scroll-Y, mouse-rotate, entry.
     <Parallax speed={parallaxSpeeds[index]} className={cn('absolute', positions[index])}>
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={float(0.4 + index * 0.18)}
-        whileHover={{ scale: 1.05, transition: { duration: 0.4, ease: easeOutExpo } }}
-        className={cn('border-hard p-5 shadow-hard-xl', tones[card.tone])}
-      >
-        <div
-          className={cn(
-            'mb-3 border-b-[2px] pb-2 font-display text-[11px] uppercase tracking-[2px]',
-            isLight ? 'border-fg-light text-fg-light' : 'border-fg text-fg-alt'
-          )}
+      <TiltCard maxTilt={12} shine={isLight} shineColor="rgba(255,255,255,0.18)">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={float(0.4 + index * 0.18)}
+          whileHover={{ scale: 1.05, transition: { duration: 0.4, ease: easeOutExpo } }}
+          style={{ translateZ: `${translateZValues[index]}px` }}
+          className={cn('border-hard p-5 shadow-hard-xl', tones[card.tone])}
         >
-          {card.label}
-        </div>
-        <div className="flex flex-col gap-2">
-          {card.rows.map((row) => (
-            <div
-              key={row}
-              className={cn(
-                'flex items-center gap-2.5 text-[13px] font-bold',
-                isLight ? 'text-fg-light' : 'text-fg-alt'
-              )}
-            >
-              <span
+          <div
+            className={cn(
+              'mb-3 border-b-[2px] pb-2 font-display text-[11px] uppercase tracking-[2px]',
+              isLight ? 'border-fg-light text-fg-light' : 'border-fg text-fg-alt'
+            )}
+          >
+            {card.label}
+          </div>
+          <div className="flex flex-col gap-2">
+            {card.rows.map((row) => (
+              <div
+                key={row}
                 className={cn(
-                  'h-3 w-3 shrink-0 border-[2px]',
-                  isLight ? 'border-fg-light' : 'border-fg'
+                  'flex items-center gap-2.5 text-[13px] font-bold',
+                  isLight ? 'text-fg-light' : 'text-fg-alt'
                 )}
-              />
-              <span>{row}</span>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+              >
+                <span
+                  className={cn(
+                    'h-3 w-3 shrink-0 border-[2px]',
+                    isLight ? 'border-fg-light' : 'border-fg'
+                  )}
+                />
+                <span>{row}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </TiltCard>
     </Parallax>
   )
 }

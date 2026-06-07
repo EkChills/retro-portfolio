@@ -4,7 +4,8 @@ import { BackgroundText } from '~/components/BackgroundText'
 import { CountUp } from '~/components/CountUp'
 import { Reveal } from '~/components/Reveal'
 import { SectionLabel } from '~/components/SectionLabel'
-import { easeOutExpo, stagger } from '~/lib/motion'
+import { TiltCard } from '~/components/TiltCard'
+import { easeOutExpo, fadeUp3D, stagger } from '~/lib/motion'
 
 /**
  * About — narrative paragraphs + a 4-stat grid.
@@ -39,7 +40,7 @@ export function About() {
         <div className="grid items-start gap-12 lg:grid-cols-[3fr_2fr]">
           {/* Narrative */}
           <div>
-            <Reveal as="h2" className="mb-4 font-display text-[clamp(36px,6vw,56px)] leading-[1.1] text-fg-alt">
+            <Reveal as="h2" variants={fadeUp3D} className="mb-4 font-display text-[clamp(36px,6vw,56px)] leading-[1.1] text-fg-alt">
               {about.title}
             </Reveal>
 
@@ -84,8 +85,8 @@ export function About() {
               const suffix = stat.value.replace(/[0-9]/g, '')
 
               return (
+                <TiltCard key={stat.label} maxTilt={10} shine={false}>
                 <motion.div
-                  key={stat.label}
                   variants={{
                     hidden: { opacity: 0, scale: 0.85, y: 24 },
                     visible: {
@@ -106,6 +107,7 @@ export function About() {
                     {stat.label}
                   </div>
                 </motion.div>
+                </TiltCard>
               )
             })}
           </motion.div>
